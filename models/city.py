@@ -19,3 +19,11 @@ class City(BaseModel, Base):
     else:
         state_id = ""
         name = ""
+
+    def __init__(self, *args, **kwargs):
+        """Initialize City."""
+        super().__init__(*args, **kwargs)
+        if "name" not in kwargs:
+            self.name = ""
+        if "state_id" not in kwargs:
+            self.state_id = ""

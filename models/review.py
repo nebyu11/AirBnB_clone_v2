@@ -17,3 +17,13 @@ class Review(BaseModel, Base):
         place_id = ""
         user_id = ""
         text = ""
+
+    def __init__(self, *args, **kwargs):
+        """Initialize Review."""
+        super().__init__(*args, **kwargs)
+        if "place_id" not in kwargs:
+            self.place_id = ""
+        if "user_id" not in kwargs:
+            self.user_id = ""
+        if "text" not in kwargs:
+            self.text = ""

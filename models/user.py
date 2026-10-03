@@ -26,3 +26,15 @@ class User(BaseModel, Base):
         password = ""
         first_name = ""
         last_name = ""
+
+    def __init__(self, *args, **kwargs):
+        """Initialize User."""
+        super().__init__(*args, **kwargs)
+        if "email" not in kwargs:
+            self.email = ""
+        if "password" not in kwargs:
+            self.password = ""
+        if "first_name" not in kwargs:
+            self.first_name = ""
+        if "last_name" not in kwargs:
+            self.last_name = ""

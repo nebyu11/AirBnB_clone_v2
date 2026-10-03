@@ -60,10 +60,11 @@ class DBStorage:
 
     def new(self, obj):
         """Add the object to the current database session."""
-        if obj is not None:
+        if obj is not None and hasattr(obj, "__tablename__"):
             self.__session.add(obj)
 
     def save(self):
+
         """Commit all changes of the current database session."""
         self.__session.commit()
 
