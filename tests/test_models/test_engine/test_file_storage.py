@@ -14,6 +14,7 @@ from models.review import Review
 from models import storage
 
 
+@unittest.skipIf(os.getenv("HBNB_TYPE_STORAGE") == "db", "FileStorage testing")
 class TestFileStorage(unittest.TestCase):
     """Test suite for FileStorage class."""
 
