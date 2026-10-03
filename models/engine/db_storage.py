@@ -37,14 +37,16 @@ class DBStorage:
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
-        """Query on the current database session all objects dependent of the class name."""
+        """Query on the current database session all objects of class."""
         classes = [State, City, User, Place, Review, Amenity]
         obj_dict = {}
         if cls is not None:
             if isinstance(cls, str):
                 cls = globals().get(cls, None)
-            if cls in classes or (cls is not None and hasattr(cls, "__tablename__")):
+            is_tbl = cls is not None and hasattr(cls, "__tablename__")
+            if cls in classes or is_tbl:
                 query_objs = self.__session.query(cls).all()
+
                 for obj in query_objs:
                     key = "{}.{}".format(obj.__class__.__name__, obj.id)
                     obj_dict[key] = obj
@@ -73,11 +75,13 @@ class DBStorage:
     def reload(self):
         """Create all tables in database and create current session."""
         Base.metadata.create_all(self.__engine)
-        session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        session_factory = sessionmaker(
+            bind=self.__engine, expire_on_commit=False
+        )
         Session = scoped_session(session_factory)
         self.__session = Session()
 
     def close(self):
-        """Call remove() method on the private session attribute (self.__session)."""
+        """Call close/remove on the session attribute."""
         if self.__session:
             self.__session.close()

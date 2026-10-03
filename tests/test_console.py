@@ -90,7 +90,10 @@ class TestHBNBCommand(unittest.TestCase):
     def test_create_with_multiple_params(self):
         """Test create with string, int, float parameters."""
         cmd = HBNBCommand()
-        cmd.onecmd('create Place name="My_little_house" number_rooms=4 latitude=37.773972')
+        cmd.onecmd(
+            'create Place name="My_little_house" number_rooms=4 '
+            'latitude=37.773972'
+        )
         place_id = self.held_output.getvalue().strip()
         key = "Place.{}".format(place_id)
         self.assertIn(key, storage.all())
@@ -102,4 +105,3 @@ class TestHBNBCommand(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

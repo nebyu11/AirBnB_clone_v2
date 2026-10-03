@@ -12,8 +12,20 @@ if getenv("HBNB_TYPE_STORAGE") == "db":
     place_amenity = Table(
         "place_amenity",
         Base.metadata,
-        Column("place_id", String(60), ForeignKey("places.id"), primary_key=True, nullable=False),
-        Column("amenity_id", String(60), ForeignKey("amenities.id"), primary_key=True, nullable=False)
+        Column(
+            "place_id",
+            String(60),
+            ForeignKey("places.id"),
+            primary_key=True,
+            nullable=False
+        ),
+        Column(
+            "amenity_id",
+            String(60),
+            ForeignKey("amenities.id"),
+            primary_key=True,
+            nullable=False
+        )
     )
 
 
@@ -32,8 +44,15 @@ class Place(BaseModel, Base):
         price_by_night = Column(Integer, nullable=False, default=0)
         latitude = Column(Float, nullable=True)
         longitude = Column(Float, nullable=True)
-        reviews = relationship("Review", backref="place", cascade="all, delete, delete-orphan")
-        amenities = relationship("Amenity", secondary=place_amenity, viewonly=False, back_populates="place_amenities")
+        reviews = relationship(
+            "Review", backref="place", cascade="all, delete, delete-orphan"
+        )
+        amenities = relationship(
+            "Amenity",
+            secondary=place_amenity,
+            viewonly=False,
+            back_populates="place_amenities"
+        )
     else:
         city_id = ""
         user_id = ""
@@ -67,6 +86,6 @@ class Place(BaseModel, Base):
 
         @amenities.setter
         def amenities(self, obj):
-            """Set/append an Amenity object id to amenity_ids for FileStorage."""
+            """Append an Amenity object id to amenity_ids."""
             if isinstance(obj, Amenity) and obj.id not in self.amenity_ids:
                 self.amenity_ids.append(obj.id)
