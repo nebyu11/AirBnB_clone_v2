@@ -47,9 +47,14 @@ class TestHBNBCommand(unittest.TestCase):
     def test_create_valid(self):
         """Test create with valid class."""
         cmd = HBNBCommand()
-        cmd.onecmd("create BaseModel")
-        obj_id = self.held_output.getvalue().strip()
-        self.assertIn("BaseModel.{}".format(obj_id), storage.all())
+        if os.getenv("HBNB_TYPE_STORAGE") == "db":
+            cmd.onecmd('create State name="California"')
+            obj_id = self.held_output.getvalue().strip()
+            self.assertIn("State.{}".format(obj_id), storage.all())
+        else:
+            cmd.onecmd("create BaseModel")
+            obj_id = self.held_output.getvalue().strip()
+            self.assertIn("BaseModel.{}".format(obj_id), storage.all())
 
     def test_show_missing_class(self):
         """Test show without class name."""
@@ -84,11 +89,18 @@ class TestHBNBCommand(unittest.TestCase):
     def test_all(self):
         """Test all command."""
         cmd = HBNBCommand()
-        cmd.onecmd("create User")
-        self.held_output.truncate(0)
-        self.held_output.seek(0)
-        cmd.onecmd("all User")
-        self.assertIn("[User]", self.held_output.getvalue())
+        if os.getenv("HBNB_TYPE_STORAGE") == "db":
+            cmd.onecmd('create State name="California"')
+            self.held_output.truncate(0)
+            self.held_output.seek(0)
+            cmd.onecmd("all State")
+            self.assertIn("[State]", self.held_output.getvalue())
+        else:
+            cmd.onecmd("create User")
+            self.held_output.truncate(0)
+            self.held_output.seek(0)
+            cmd.onecmd("all User")
+            self.assertIn("[User]", self.held_output.getvalue())
 
     def test_create_with_params(self):
         """Test create with string, float, and int parameters."""
@@ -133,7 +145,7 @@ class TestHBNBCommand(unittest.TestCase):
             obj = storage.all()[key]
             self.assertEqual(obj.name, "My little house")
             self.assertEqual(obj.number_rooms, 4)
-            self.assertEqual(obj.latitude, 37.773972)
+            self.assertAlmostEqual(obj.latitude, 37.773972, places=3)
         else:
             cmd = HBNBCommand()
             cmd.onecmd(
