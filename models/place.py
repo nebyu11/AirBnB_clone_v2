@@ -32,6 +32,8 @@ if getenv("HBNB_TYPE_STORAGE") == "db":
 class Place(BaseModel, Base):
     """Represent a Place."""
 
+    amenity_ids = []
+
     if getenv("HBNB_TYPE_STORAGE") == "db":
         __tablename__ = "places"
         city_id = Column(String(60), ForeignKey("cities.id"), nullable=False)
@@ -64,7 +66,6 @@ class Place(BaseModel, Base):
         price_by_night = 0
         latitude = 0.0
         longitude = 0.0
-        amenity_ids = []
 
         @property
         def reviews(self):
@@ -113,3 +114,5 @@ class Place(BaseModel, Base):
             self.latitude = 0.0
         if "longitude" not in kwargs:
             self.longitude = 0.0
+        if "amenity_ids" not in kwargs:
+            self.amenity_ids = []

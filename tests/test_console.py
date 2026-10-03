@@ -89,18 +89,53 @@ class TestHBNBCommand(unittest.TestCase):
 
     def test_create_with_multiple_params(self):
         """Test create with string, int, float parameters."""
-        cmd = HBNBCommand()
-        cmd.onecmd(
-            'create Place name="My_little_house" number_rooms=4 '
-            'latitude=37.773972'
-        )
-        place_id = self.held_output.getvalue().strip()
-        key = "Place.{}".format(place_id)
-        self.assertIn(key, storage.all())
-        obj = storage.all()[key]
-        self.assertEqual(obj.name, "My little house")
-        self.assertEqual(obj.number_rooms, 4)
-        self.assertEqual(obj.latitude, 37.773972)
+        if os.getenv("HBNB_TYPE_STORAGE") == "db":
+            cmd = HBNBCommand()
+            cmd.onecmd('create State name="California"')
+            state_id = self.held_output.getvalue().strip().split()[-1]
+            self.held_output.truncate(0)
+            self.held_output.seek(0)
+
+            cmd.onecmd(
+                'create City state_id="{}" name="San_Francisco"'.format(
+                    state_id
+                )
+            )
+            city_id = self.held_output.getvalue().strip().split()[-1]
+            self.held_output.truncate(0)
+            self.held_output.seek(0)
+
+            cmd.onecmd('create User email="user@test.com" password="pwd"')
+            user_id = self.held_output.getvalue().strip().split()[-1]
+            self.held_output.truncate(0)
+            self.held_output.seek(0)
+
+            cmd.onecmd(
+                'create Place city_id="{}" user_id="{}" '
+                'name="My_little_house" number_rooms=4 '
+                'latitude=37.773972'.format(city_id, user_id)
+            )
+
+            place_id = self.held_output.getvalue().strip().split()[-1]
+            key = "Place.{}".format(place_id)
+            self.assertIn(key, storage.all())
+            obj = storage.all()[key]
+            self.assertEqual(obj.name, "My little house")
+            self.assertEqual(obj.number_rooms, 4)
+            self.assertEqual(obj.latitude, 37.773972)
+        else:
+            cmd = HBNBCommand()
+            cmd.onecmd(
+                'create Place name="My_little_house" number_rooms=4 '
+                'latitude=37.773972'
+            )
+            place_id = self.held_output.getvalue().strip()
+            key = "Place.{}".format(place_id)
+            self.assertIn(key, storage.all())
+            obj = storage.all()[key]
+            self.assertEqual(obj.name, "My little house")
+            self.assertEqual(obj.number_rooms, 4)
+            self.assertEqual(obj.latitude, 37.773972)
 
 
 if __name__ == "__main__":
