@@ -44,14 +44,23 @@ class TestFileStorage(unittest.TestCase):
         self.assertIn("BaseModel.{}".format(bm.id), data)
         self.assertIn("User.{}".format(u.id), data)
 
-    def test_reload(self):
-        """Test reload method."""
-        bm = BaseModel()
-        bm.save()
-        storage.reload()
-        all_objs = storage.all()
-        self.assertIn("BaseModel.{}".format(bm.id), all_objs)
+    def test_all_with_cls(self):
+        """Test all method with cls argument."""
+        state = State()
+        user = User()
+        states = storage.all(State)
+        self.assertIn("State.{}".format(state.id), states)
+        self.assertNotIn("User.{}".format(user.id), states)
+
+    def test_delete(self):
+        """Test delete method."""
+        state = State()
+        key = "State.{}".format(state.id)
+        self.assertIn(key, storage.all())
+        storage.delete(state)
+        self.assertNotIn(key, storage.all())
 
 
 if __name__ == "__main__":
     unittest.main()
+

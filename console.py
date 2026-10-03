@@ -51,13 +51,33 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, arg):
         """Creates a new instance of a class, saves it and prints id."""
-        args = parse_args(arg)
+        args = arg.split()
         if len(args) == 0:
             print("** class name missing **")
         elif args[0] not in CLASSES:
             print("** class doesn't exist **")
         else:
-            new_instance = CLASSES[args[0]]()
+            kwargs = {}
+            for param in args[1:]:
+                if "=" not in param:
+                    continue
+                key, val = param.split("=", 1)
+                if not key:
+                    continue
+                if val.startswith('"') and val.endswith('"') and len(val) >= 2:
+                    val = val[1:-1].replace('\\"', '"').replace('_', ' ')
+                    kwargs[key] = val
+                elif "." in val:
+                    try:
+                        kwargs[key] = float(val)
+                    except ValueError:
+                        continue
+                else:
+                    try:
+                        kwargs[key] = int(val)
+                    except ValueError:
+                        continue
+            new_instance = CLASSES[args[0]](**kwargs)
             new_instance.save()
             print(new_instance.id)
 
@@ -101,9 +121,9 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
         else:
             obj_list = []
-            for key, obj in storage.all().items():
-                if len(args) == 0 or args[0] == obj.__class__.__name__:
-                    obj_list.append(str(obj))
+            cls = CLASSES[args[0]] if len(args) > 0 else None
+            for key, obj in storage.all(cls).items():
+                obj_list.append(str(obj))
             print(obj_list)
 
     def do_count(self, arg):

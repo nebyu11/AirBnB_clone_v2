@@ -65,4 +65,6 @@ EOF  all  create  destroy  help  quit  show  update
 ```
 
 ## Authors
-- Nebyu E. Assefa
+- Yonas Leykun
+- Nebyu Assefa
+

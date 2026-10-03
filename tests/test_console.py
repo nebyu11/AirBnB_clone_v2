@@ -78,17 +78,28 @@ class TestHBNBCommand(unittest.TestCase):
         cmd.onecmd("all User")
         self.assertIn("[User]", self.held_output.getvalue())
 
-    def test_update(self):
-        """Test update command."""
+    def test_create_with_params(self):
+        """Test create with string, float, and int parameters."""
         cmd = HBNBCommand()
-        cmd.onecmd("create User")
-        user_id = self.held_output.getvalue().strip()
-        self.held_output.truncate(0)
-        self.held_output.seek(0)
-        cmd.onecmd('update User {} first_name "Betty"'.format(user_id))
-        cmd.onecmd("show User {}".format(user_id))
-        self.assertIn("'first_name': 'Betty'", self.held_output.getvalue())
+        cmd.onecmd('create State name="California"')
+        state_id = self.held_output.getvalue().strip()
+        key = "State.{}".format(state_id)
+        self.assertIn(key, storage.all())
+        self.assertEqual(storage.all()[key].name, "California")
+
+    def test_create_with_multiple_params(self):
+        """Test create with string, int, float parameters."""
+        cmd = HBNBCommand()
+        cmd.onecmd('create Place name="My_little_house" number_rooms=4 latitude=37.773972')
+        place_id = self.held_output.getvalue().strip()
+        key = "Place.{}".format(place_id)
+        self.assertIn(key, storage.all())
+        obj = storage.all()[key]
+        self.assertEqual(obj.name, "My little house")
+        self.assertEqual(obj.number_rooms, 4)
+        self.assertEqual(obj.latitude, 37.773972)
 
 
 if __name__ == "__main__":
     unittest.main()
+
