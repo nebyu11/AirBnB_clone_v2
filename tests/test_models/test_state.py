@@ -19,6 +19,29 @@ class TestState(unittest.TestCase):
         self.assertTrue(hasattr(s, "name"))
         self.assertEqual(s.name, "")
 
+    def test_to_dict(self):
+        """Test State to_dict method."""
+        s = State()
+        d = s.to_dict()
+        self.assertEqual(d["__class__"], "State")
+
+    def test_str_representation(self):
+        """Test State __str__ output."""
+        s = State()
+        string = str(s)
+        self.assertIn("[State]", string)
+        self.assertIn(s.id, string)
+
+    def test_kwargs_instantiation(self):
+        """Test State instantiation with kwargs."""
+        s = State(name="California")
+        self.assertEqual(s.name, "California")
+
+    def test_cities_property(self):
+        """Test cities property returns a list."""
+        s = State()
+        self.assertIsInstance(s.cities, list)
+
 
 if __name__ == "__main__":
     unittest.main()

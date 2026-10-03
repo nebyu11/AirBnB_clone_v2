@@ -47,6 +47,20 @@ class TestBaseModel(unittest.TestCase):
         self.assertIsInstance(d["created_at"], str)
         self.assertIsInstance(d["updated_at"], str)
 
+    def test_to_dict_type(self):
+        """Test to_dict returns a dictionary."""
+        bm = BaseModel()
+        self.assertIsInstance(bm.to_dict(), dict)
+
+    def test_to_dict_keys(self):
+        """Test to_dict contains expected keys."""
+        bm = BaseModel()
+        d = bm.to_dict()
+        self.assertIn("id", d)
+        self.assertIn("created_at", d)
+        self.assertIn("updated_at", d)
+        self.assertIn("__class__", d)
+
     def test_kwargs_instantiation(self):
         """Test instantiation with kwargs."""
         bm = BaseModel()
@@ -55,6 +69,18 @@ class TestBaseModel(unittest.TestCase):
         self.assertEqual(bm.id, bm2.id)
         self.assertEqual(bm.created_at, bm2.created_at)
         self.assertEqual(bm.updated_at, bm2.updated_at)
+
+    def test_kwargs_custom_attr(self):
+        """Test instantiation with custom kwargs attributes."""
+        bm = BaseModel(name="Test", number=89)
+        self.assertEqual(bm.name, "Test")
+        self.assertEqual(bm.number, 89)
+
+    def test_kwargs_empty(self):
+        """Test instantiation with empty kwargs."""
+        bm = BaseModel(**{})
+        self.assertIsInstance(bm.id, str)
+        self.assertIsInstance(bm.created_at, datetime)
 
 
 if __name__ == "__main__":

@@ -52,6 +52,12 @@ class TestFileStorage(unittest.TestCase):
         self.assertIn("State.{}".format(state.id), states)
         self.assertNotIn("User.{}".format(user.id), states)
 
+    def test_all_with_cls_str(self):
+        """Test all method with string cls argument."""
+        state = State()
+        states = storage.all("State")
+        self.assertIn("State.{}".format(state.id), states)
+
     def test_delete(self):
         """Test delete method."""
         state = State()
@@ -59,6 +65,37 @@ class TestFileStorage(unittest.TestCase):
         self.assertIn(key, storage.all())
         storage.delete(state)
         self.assertNotIn(key, storage.all())
+
+    def test_delete_none(self):
+        """Test delete with None does nothing."""
+        count_before = len(storage.all())
+        storage.delete(None)
+        self.assertEqual(len(storage.all()), count_before)
+
+    def test_reload(self):
+        """Test reload method loads objects from file.json."""
+        bm = BaseModel()
+        storage.new(bm)
+        storage.save()
+        storage.reload()
+        self.assertIn("BaseModel.{}".format(bm.id), storage.all())
+
+    def test_reload_nonexistent_file(self):
+        """Test reload when file.json does not exist."""
+        if os.path.exists("file.json"):
+            os.remove("file.json")
+        try:
+            storage.reload()
+        except Exception:
+            self.fail("reload raised Exception on non-existent file!")
+
+    def test_close(self):
+        """Test close method calls reload."""
+        bm = BaseModel()
+        storage.new(bm)
+        storage.save()
+        storage.close()
+        self.assertIn("BaseModel.{}".format(bm.id), storage.all())
 
 
 if __name__ == "__main__":

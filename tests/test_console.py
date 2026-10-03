@@ -69,6 +69,18 @@ class TestHBNBCommand(unittest.TestCase):
         cmd.onecmd("show BaseModel 999999")
         self.assertIn("** no instance found **", self.held_output.getvalue())
 
+    def test_destroy_missing_class(self):
+        """Test destroy without class name."""
+        cmd = HBNBCommand()
+        cmd.onecmd("destroy")
+        self.assertIn("** class name missing **", self.held_output.getvalue())
+
+    def test_destroy_missing_id(self):
+        """Test destroy without id."""
+        cmd = HBNBCommand()
+        cmd.onecmd("destroy BaseModel")
+        self.assertIn("** instance id missing **", self.held_output.getvalue())
+
     def test_all(self):
         """Test all command."""
         cmd = HBNBCommand()
@@ -115,7 +127,6 @@ class TestHBNBCommand(unittest.TestCase):
                 'name="My_little_house" number_rooms=4 '
                 'latitude=37.773972'.format(city_id, user_id)
             )
-
             place_id = self.held_output.getvalue().strip().split()[-1]
             key = "Place.{}".format(place_id)
             self.assertIn(key, storage.all())
@@ -136,6 +147,18 @@ class TestHBNBCommand(unittest.TestCase):
             self.assertEqual(obj.name, "My little house")
             self.assertEqual(obj.number_rooms, 4)
             self.assertEqual(obj.latitude, 37.773972)
+
+    def test_help_quit(self):
+        """Test help quit."""
+        cmd = HBNBCommand()
+        cmd.onecmd("help quit")
+        self.assertNotEqual(self.held_output.getvalue(), "")
+
+    def test_help_EOF(self):
+        """Test help EOF."""
+        cmd = HBNBCommand()
+        cmd.onecmd("help EOF")
+        self.assertNotEqual(self.held_output.getvalue(), "")
 
 
 if __name__ == "__main__":
