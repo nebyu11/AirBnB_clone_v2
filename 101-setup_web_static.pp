@@ -6,7 +6,7 @@ $nginx_conf = "server {
     root /var/www/html;
     index index.html index.htm index.nginx-debian.html;
     server_name _;
-    location /hbnb_static {
+    location /hbnb_static/ {
         alias /data/web_static/current/;
         index index.html index.htm;
     }

@@ -41,7 +41,7 @@ def do_deploy(archive_path):
         return False
     try:
         filename = os.path.basename(archive_path)
-        folder_name = filename.replace(".tgz", "")
+        folder_name = filename.split(".")[0]
         release_path = "/data/web_static/releases/{}/".format(folder_name)
 
         put(archive_path, "/tmp/{}".format(filename))
