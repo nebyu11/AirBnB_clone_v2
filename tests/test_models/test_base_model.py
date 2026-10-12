@@ -82,6 +82,23 @@ class TestBaseModel(unittest.TestCase):
         self.assertIsInstance(bm.id, str)
         self.assertIsInstance(bm.created_at, datetime)
 
+    def test_delete(self):
+        """Test delete method removes instance from storage."""
+        bm = BaseModel()
+        bm.save()
+        key = "BaseModel.{}".format(bm.id)
+        from models import storage
+        self.assertIn(key, storage.all())
+        bm.delete()
+        self.assertNotIn(key, storage.all())
+
+    def test_to_dict_removes_sa_instance_state(self):
+        """Test to_dict removes _sa_instance_state if present."""
+        bm = BaseModel()
+        bm._sa_instance_state = "mock_state"
+        d = bm.to_dict()
+        self.assertNotIn("_sa_instance_state", d)
+
 
 if __name__ == "__main__":
     unittest.main()

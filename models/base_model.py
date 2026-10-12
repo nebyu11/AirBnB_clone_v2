@@ -40,12 +40,8 @@ class BaseModel:
                         setattr(self, key, value)
                 else:
                     setattr(self, key, value)
-        if not kwargs:
-            if getenv("HBNB_TYPE_STORAGE") != "db":
-                models.storage.new(self)
 
     def save(self):
-
         """Update updated_at with current datetime and save to storage."""
         self.updated_at = datetime.utcnow()
         models.storage.new(self)

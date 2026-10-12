@@ -68,6 +68,25 @@ class TestPlace(unittest.TestCase):
         p = Place()
         self.assertIsInstance(p.amenity_ids, list)
 
+    def test_reviews_property(self):
+        """Test reviews property returns a list in FileStorage mode."""
+        from os import getenv
+        if getenv("HBNB_TYPE_STORAGE") != "db":
+            p = Place()
+            self.assertIsInstance(p.reviews, list)
+
+    def test_amenities_getter_and_setter(self):
+        """Test amenities getter and setter for FileStorage."""
+        from os import getenv
+        if getenv("HBNB_TYPE_STORAGE") != "db":
+            from models.amenity import Amenity
+            p = Place()
+            a = Amenity(name="Wifi")
+            p.amenities = a
+            self.assertIn(a.id, p.amenity_ids)
+            p.amenities = "not an amenity"
+            self.assertNotIn("not an amenity", p.amenity_ids)
+
 
 if __name__ == "__main__":
     unittest.main()

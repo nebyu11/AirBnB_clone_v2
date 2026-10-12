@@ -9,6 +9,29 @@ from models.user import User
 from models import storage
 
 
+class TestDBStorageDocs(unittest.TestCase):
+    """Test suite for DBStorage documentation and interface."""
+
+    def test_module_docstring(self):
+        """Test DBStorage module docstring exists."""
+        import models.engine.db_storage as db_mod
+        self.assertIsNotNone(db_mod.__doc__)
+        self.assertGreater(len(db_mod.__doc__.strip()), 1)
+
+    def test_class_docstring(self):
+        """Test DBStorage class docstring exists."""
+        self.assertIsNotNone(DBStorage.__doc__)
+        self.assertGreater(len(DBStorage.__doc__.strip()), 1)
+
+    def test_methods_exist(self):
+        """Test DBStorage methods exist."""
+        self.assertTrue(hasattr(DBStorage, "all"))
+        self.assertTrue(hasattr(DBStorage, "new"))
+        self.assertTrue(hasattr(DBStorage, "save"))
+        self.assertTrue(hasattr(DBStorage, "delete"))
+        self.assertTrue(hasattr(DBStorage, "reload"))
+
+
 @unittest.skipIf(getenv("HBNB_TYPE_STORAGE") != "db", "DBStorage testing")
 class TestDBStorage(unittest.TestCase):
     """Test suite for DBStorage."""

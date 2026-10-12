@@ -22,4 +22,4 @@ class Amenity(BaseModel, Base):
         """Initialize Amenity."""
         super().__init__(*args, **kwargs)
         if "name" not in kwargs:
-            self.name = ""
+            self.name = ""

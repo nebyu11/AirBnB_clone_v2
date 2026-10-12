@@ -49,6 +49,8 @@ class TestFileStorage(unittest.TestCase):
         """Test all method with cls argument."""
         state = State()
         user = User()
+        storage.new(state)
+        storage.new(user)
         states = storage.all(State)
         self.assertIn("State.{}".format(state.id), states)
         self.assertNotIn("User.{}".format(user.id), states)
@@ -56,12 +58,14 @@ class TestFileStorage(unittest.TestCase):
     def test_all_with_cls_str(self):
         """Test all method with string cls argument."""
         state = State()
+        storage.new(state)
         states = storage.all("State")
         self.assertIn("State.{}".format(state.id), states)
 
     def test_delete(self):
         """Test delete method."""
         state = State()
+        storage.new(state)
         key = "State.{}".format(state.id)
         self.assertIn(key, storage.all())
         storage.delete(state)
