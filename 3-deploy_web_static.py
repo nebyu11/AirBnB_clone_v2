@@ -4,13 +4,12 @@ Fabric script that creates and distributes an archive to web servers,
 using the function deploy.
 """
 from datetime import datetime
-from fabric.api import env, local, put, run, runs_once
+from fabric.api import env, local, put, run
 import os
 
 env.hosts = ['52.55.249.213', '54.157.32.137']
 
 
-@runs_once
 def do_pack():
     """
     Generates a .tgz archive from the contents of the web_static folder.
@@ -49,7 +48,7 @@ def do_deploy(archive_path):
         run("mkdir -p {}".format(release_path))
         run("tar -xzf /tmp/{} -C {}".format(filename, release_path))
         run("rm /tmp/{}".format(filename))
-        run("mv {0}web_static/* {0} 2>/dev/null || true".format(release_path))
+        run("mv {0}web_static/* {0}".format(release_path))
         run("rm -rf {0}web_static".format(release_path))
         run("rm -rf /data/web_static/current")
         run("ln -s {} /data/web_static/current".format(release_path))
