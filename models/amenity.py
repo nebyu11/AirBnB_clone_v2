@@ -20,6 +20,4 @@ class Amenity(BaseModel, Base):
 
     def __init__(self, *args, **kwargs):
         """Initialize Amenity."""
-        super().__init__(*args, **kwargs)
-        if "name" not in kwargs:
-            self.name = ""
+        super().__init__(*args, **kwargs)

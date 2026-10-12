@@ -32,5 +32,3 @@ class State(BaseModel, Base):
     def __init__(self, *args, **kwargs):
         """Initialize State."""
         super().__init__(*args, **kwargs)
-        if "name" not in kwargs:
-            self.name = ""

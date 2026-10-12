@@ -78,8 +78,11 @@ class HBNBCommand(cmd.Cmd):
                     except ValueError:
                         continue
             new_instance = CLASSES[args[0]](**kwargs)
-            new_instance.save()
-            print(new_instance.id)
+            try:
+                new_instance.save()
+                print(new_instance.id)
+            except Exception:
+                pass
 
     def do_show(self, arg):
         """Prints string representation of instance by class name and id."""
