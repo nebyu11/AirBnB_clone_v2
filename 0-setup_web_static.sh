@@ -22,13 +22,10 @@ ln -s /data/web_static/releases/test /data/web_static/current
 
 chown -R ubuntu:ubuntu /data/
 
-if grep -q "location /hbnb_static" /etc/nginx/sites-available/default; then
-    sed -i '/location \/hbnb_static/,/}/d' /etc/nginx/sites-available/default
-fi
-if grep -q "server_name" /etc/nginx/sites-available/default; then
-    sed -i '/server_name/a \    location /hbnb_static {\n        alias /data/web_static/current;\n        index index.html index.htm;\n    }' /etc/nginx/sites-available/default
-else
-    sed -i '/listen 80/a \    location /hbnb_static {\n        alias /data/web_static/current;\n        index index.html index.htm;\n    }' /etc/nginx/sites-available/default
+nginx_config="/etc/nginx/sites-available/default"
+
+if ! grep -q "location /hbnb_static" "$nginx_config"; then
+    sed -i '/server_name _;/a \\tlocation /hbnb_static/ {\n\t\talias /data/web_static/current/;\n\t}\n' "$nginx_config"
 fi
 
 service nginx restart
