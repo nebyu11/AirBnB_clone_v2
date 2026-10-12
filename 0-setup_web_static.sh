@@ -18,7 +18,7 @@ cat << 'EOF' > /data/web_static/releases/test/index.html
 EOF
 
 rm -rf /data/web_static/current
-ln -s /data/web_static/releases/test/ /data/web_static/current
+ln -s /data/web_static/releases/test /data/web_static/current
 
 chown -R ubuntu:ubuntu /data/
 
